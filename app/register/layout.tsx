@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'JobNote',
-  description: 'Track and Apply for Jobs',
+  title: 'Register',
+  description: 'Register for JobNote',
 }
 
 export default function RootLayout({
