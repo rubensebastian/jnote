@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [message, setMessage] = useState('')
-  const router = useRouter() // Initialize router
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,8 +19,7 @@ const LoginForm = () => {
 
     const data = await res.json()
     if (data.token) {
-      localStorage.setItem('token', data.token) // Save token (optional)
-      router.push('/jobs') // Redirect to jobs page
+      router.push('/jobs')
     } else {
       setMessage(data.message)
     }

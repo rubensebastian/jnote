@@ -11,7 +11,7 @@ const SignupForm = () => {
     confirmPassword: '',
   })
   const [message, setMessage] = useState('')
-  const router = useRouter() // Initialize router
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,7 +21,7 @@ const SignupForm = () => {
       return
     }
 
-    const res = await fetch('/api/auth/signup', {
+    const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -33,7 +33,7 @@ const SignupForm = () => {
 
     const data = await res.json()
     if (data.applicant) {
-      router.push('/jobs') // Redirect to jobs page
+      router.push('/jobs')
     } else {
       setMessage(data.message)
     }
@@ -85,7 +85,7 @@ const SignupForm = () => {
           type='submit'
           className='w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600'
         >
-          Sign Up
+          Register
         </button>
       </form>
       {message && <p className='text-center text-red-500 mt-4'>{message}</p>}

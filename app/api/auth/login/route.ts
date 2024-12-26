@@ -44,14 +44,22 @@ export async function POST(request: Request) {
       { id: applicant.id, email: applicant.email },
       JWT_SECRET,
       {
-        expiresIn: '1h',
+        expiresIn: '30d',
       }
     )
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       { message: 'Login successful', token },
       { status: 200 }
     )
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    })
+
+    return response
   } catch (error) {
     return NextResponse.json(
       { message: 'Internal server error' },
