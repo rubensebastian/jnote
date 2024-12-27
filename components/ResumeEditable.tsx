@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client'
 import type { education } from '@prisma/client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { JwtPayload } from 'jsonwebtoken'
 
 type ExperienceWithResponsibility = Prisma.experienceGetPayload<{
   include: { responsibility: true }
@@ -12,19 +13,44 @@ type ExperienceWithResponsibility = Prisma.experienceGetPayload<{
 interface ResumeEditableProps {
   educations: education[]
   experiences: ExperienceWithResponsibility[]
+  user: JwtPayload
+}
+
+interface NewEducation {
+  applicant_id: number
+  field: string
+  start_date: Date
+  end_date: Date | null
+  institution: string
+  level: string
 }
 
 export default function ResumeEditable({
   educations: initialEducations,
   experiences: initialExperiences,
+  user,
 }: ResumeEditableProps) {
-  const [educations, setEducations] = useState(initialEducations)
-  const [experiences, setExperiences] = useState(initialExperiences)
-  const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
+  const [educations, setEducations] = useState(initialEducations)
+  const [createEducations, setCreateEducations] = useState<NewEducation[]>([])
+  const [deleteEducations, setDeleteEducations] = useState<education[]>([])
+
+  const [experiences, setExperiences] = useState(initialExperiences)
+
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleEducationChange = (index: number, field: string, value: any) => {
     setEducations((prev) =>
+      prev.map((edu, i) => (i === index ? { ...edu, [field]: value } : edu))
+    )
+  }
+
+  const handleNewEducationChange = (
+    index: number,
+    field: string,
+    value: any
+  ) => {
+    setCreateEducations((prev) =>
       prev.map((edu, i) => (i === index ? { ...edu, [field]: value } : edu))
     )
   }
@@ -66,6 +92,17 @@ export default function ResumeEditable({
         applicant_id: edu.applicant_id.toString(),
       }))
 
+      const safeCreateEducations = createEducations.map((edu) => ({
+        ...edu,
+        applicant_id: edu.applicant_id.toString(),
+      }))
+
+      const safeDeleteEducations = deleteEducations.map((edu) => ({
+        ...edu,
+        id: edu.id.toString(),
+        applicant_id: edu.applicant_id.toString(),
+      }))
+
       const safeExperiences = experiences.map((exp) => ({
         ...exp,
         id: exp.id.toString(),
@@ -82,6 +119,8 @@ export default function ResumeEditable({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           educations: safeEducations,
+          createEducations: safeCreateEducations,
+          deleteEducations: safeDeleteEducations,
           experiences: safeExperiences,
         }),
       })
@@ -97,13 +136,55 @@ export default function ResumeEditable({
     }
   }
 
+  const deleteEducation = (index: number) => {
+    const educationsCopy = [...educations]
+    const newDeleteEducation = educationsCopy.splice(index, 1)
+    setEducations(educationsCopy)
+    setDeleteEducations([...deleteEducations, newDeleteEducation[0]])
+  }
+
+  const deleteNewEducation = (index: number) => {
+    const educationsCopy = [...createEducations]
+    educationsCopy.splice(index, 1)
+    setCreateEducations(educationsCopy)
+  }
+
+  const createEducation = () => {
+    const newEducation: NewEducation = {
+      applicant_id: user.id,
+      field: 'Field',
+      start_date: new Date(),
+      end_date: null,
+      institution: 'Institution',
+      level: 'Degree Level',
+    }
+    setCreateEducations([...createEducations, newEducation])
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className='text-center'>Education</h2>
-      <ul className='border-red-500 border-2'>
+      <h2 className='mt-4'>Education</h2>
+      <ul>
         {educations.map((education, index) => (
           <li key={education.id.toString()}>
-            <h3>{education.institution}</h3>
+            <div className='flex flex-row my-2'>
+              <input
+                name='institution'
+                value={education.institution}
+                onChange={(e) =>
+                  handleEducationChange(index, 'institution', e.target.value)
+                }
+              />
+              <button
+                className='bg-green-500 ml-2 px-1'
+                type='button'
+                onClick={() => {
+                  deleteEducation(index)
+                }}
+              >
+                Delete Education
+              </button>
+            </div>
             <div className='flex flex-row justify-between'>
               <div>
                 <input
@@ -151,11 +232,90 @@ export default function ResumeEditable({
           </li>
         ))}
       </ul>
+      <ul>
+        {createEducations.map((education, index) => (
+          <li key={index}>
+            <div className='flex flex-row my-2'>
+              <input
+                name='institution'
+                value={education.institution}
+                onChange={(e) =>
+                  handleNewEducationChange(index, 'institution', e.target.value)
+                }
+              />
+              <button
+                className='bg-green-500 ml-2 px-1'
+                type='button'
+                onClick={() => {
+                  deleteNewEducation(index)
+                }}
+              >
+                Delete Education
+              </button>
+            </div>
+            <div className='flex flex-row justify-between'>
+              <div>
+                <input
+                  name='level'
+                  value={education.level}
+                  onChange={(e) =>
+                    handleNewEducationChange(index, 'level', e.target.value)
+                  }
+                />{' '}
+                of{' '}
+                <input
+                  name='field'
+                  value={education.field}
+                  onChange={(e) =>
+                    handleNewEducationChange(index, 'field', e.target.value)
+                  }
+                />
+              </div>
+              <div>
+                <input
+                  type='date'
+                  name='start_date'
+                  value={
+                    new Date(education.start_date).toISOString().split('T')[0]
+                  }
+                  onChange={(e) =>
+                    handleNewEducationChange(
+                      index,
+                      'start_date',
+                      e.target.value
+                    )
+                  }
+                />{' '}
+                -{' '}
+                <input
+                  type='date'
+                  name='end_date'
+                  value={
+                    education.end_date
+                      ? new Date(education.end_date).toISOString().split('T')[0]
+                      : ''
+                  }
+                  onChange={(e) =>
+                    handleNewEducationChange(index, 'end_date', e.target.value)
+                  }
+                />
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <button
+        className='bg-green-500 mt-2 px-2'
+        type='button'
+        onClick={createEducation}
+      >
+        Add New Education
+      </button>
 
-      <h2 className='text-center'>Experience</h2>
-      <ul className='border-red-500 border-2'>
+      <h2 className='mt-2'>Experience</h2>
+      <ul>
         {experiences.map((experience, expIndex) => (
-          <li key={experience.id.toString()} className='mb-2'>
+          <li key={experience.id.toString()} className='pb-4 mb-4 border-b-2'>
             <div className='flex flex-row justify-between'>
               <div>
                 <input
@@ -212,7 +372,7 @@ export default function ResumeEditable({
             </div>
             {experience.responsibility &&
               experience.responsibility.length > 0 && (
-                <ul className='mt-4'>
+                <ul>
                   {experience.responsibility.map((resp, respIndex) => (
                     <li key={resp.id.toString()} className='mt-2'>
                       <textarea
@@ -233,8 +393,12 @@ export default function ResumeEditable({
           </li>
         ))}
       </ul>
+      <button className='bg-green-500 my-1 px-2' type='button'>
+        Add New Experience
+      </button>
+      <br />
       <div>{errorMessage}</div>
-      <button className='bg-green-500' type='submit'>
+      <button className='bg-green-500 my-1 px-2' type='submit'>
         Save Changes
       </button>
     </form>

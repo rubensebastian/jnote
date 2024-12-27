@@ -5,12 +5,15 @@ export async function POST(req: Request) {
   try {
     const data = await req.json()
 
-    const { educations, experiences } = data
+    const { educations, createEducations, deleteEducations, experiences } = data
+
+    //separate edited, deleted, and newly created
+    //edited should update
+    //new should add with auto ids
 
     for (const edu of educations) {
-      console.log('Updating education:', edu)
       await prisma.education.update({
-        where: { id: BigInt(edu.id) }, // Ensure id is BigInt
+        where: { id: BigInt(edu.id) },
         data: {
           institution: edu.institution,
           field: edu.field,
@@ -21,9 +24,24 @@ export async function POST(req: Request) {
       })
     }
 
-    for (const exp of experiences) {
-      console.log('Updating experience:', exp)
+    for (const edu of deleteEducations) {
+      await prisma.education.delete({
+        where: { id: BigInt(edu.id) },
+      })
+    }
 
+    for (const edu of createEducations) {
+      const isoStartDate = new Date(edu.start_date)
+      const isoEndDate = edu.end_date ? new Date(edu.end_date) : null
+      edu['start_date'] = isoStartDate
+      edu['end_date'] = isoEndDate
+    }
+
+    await prisma.education.createMany({
+      data: createEducations,
+    })
+
+    for (const exp of experiences) {
       await prisma.experience.update({
         where: { id: BigInt(exp.id) },
         data: {
@@ -35,8 +53,6 @@ export async function POST(req: Request) {
       })
 
       for (const resp of exp.responsibility) {
-        console.log('Updating responsibility:', resp)
-
         await prisma.responsibility.upsert({
           where: { id: BigInt(resp.id) },
           update: {

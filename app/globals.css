@@ -26,3 +26,7 @@ textarea {
   padding-left: 0.25em;
   border-radius: 0.25em;
 }
+
+button {
+  color: #0a0a0a;
+}

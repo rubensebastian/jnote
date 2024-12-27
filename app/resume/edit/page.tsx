@@ -28,20 +28,24 @@ export default async function ResumeEdit() {
 
   if (!user) {
     redirect('/')
+  } else {
+    const educations = await prisma.education.findMany({
+      where: { applicant_id: user.id },
+    })
+    const experiences = await prisma.experience.findMany({
+      where: { applicant_id: user.id },
+      include: { responsibility: true },
+    })
+
+    return (
+      <main className='max-w-4xl mx-auto p-4 bg-blue-900'>
+        <h1 className='text-center'>Resume</h1>
+        <ResumeEditable
+          educations={educations}
+          experiences={experiences}
+          user={user}
+        />
+      </main>
+    )
   }
-
-  const educations = await prisma.education.findMany({
-    where: { applicant_id: user.id },
-  })
-  const experiences = await prisma.experience.findMany({
-    where: { applicant_id: user.id },
-    include: { responsibility: true },
-  })
-
-  return (
-    <main className='max-w-4xl mx-auto p-4 bg-blue-900'>
-      <h1 className='text-center'>Resume</h1>
-      <ResumeEditable educations={educations} experiences={experiences} />
-    </main>
-  )
 }
