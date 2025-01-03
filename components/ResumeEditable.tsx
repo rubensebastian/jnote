@@ -1,7 +1,7 @@
 'use client'
 
 import { Prisma } from '@prisma/client'
-import type { education } from '@prisma/client'
+import type { education, responsibility } from '@prisma/client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { JwtPayload } from 'jsonwebtoken'
@@ -25,6 +25,18 @@ interface NewEducation {
   level: string
 }
 
+type NewExperience = {
+  responsibility: {
+    description: string
+  }[]
+} & {
+  applicant_id: number
+  start_date: Date
+  end_date: Date | null
+  organization: string
+  title: string
+}
+
 export default function ResumeEditable({
   educations: initialEducations,
   experiences: initialExperiences,
@@ -36,6 +48,16 @@ export default function ResumeEditable({
   const [deleteEducations, setDeleteEducations] = useState<education[]>([])
 
   const [experiences, setExperiences] = useState(initialExperiences)
+  const [createExperiences, setCreateExperiences] = useState<NewExperience[]>(
+    []
+  )
+  const [deleteExperiences, setDeleteExperiences] = useState<
+    ExperienceWithResponsibility[]
+  >([])
+
+  const [deleteResponsibilities, setDeleteResponsibilities] = useState<
+    responsibility[]
+  >([])
 
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -61,12 +83,41 @@ export default function ResumeEditable({
     )
   }
 
+  const handleNewExperienceChange = (
+    index: number,
+    field: string,
+    value: any
+  ) => {
+    setCreateExperiences((prev) =>
+      prev.map((exp, i) => (i === index ? { ...exp, [field]: value } : exp))
+    )
+  }
+
   const handleResponsibilityChange = (
     expIndex: number,
     respIndex: number,
     value: string
   ) => {
     setExperiences((prev) =>
+      prev.map((exp, i) =>
+        i === expIndex
+          ? {
+              ...exp,
+              responsibility: exp.responsibility.map((resp, j) =>
+                j === respIndex ? { ...resp, description: value } : resp
+              ),
+            }
+          : exp
+      )
+    )
+  }
+
+  const handleNewResponsibilityChange = (
+    expIndex: number,
+    respIndex: number,
+    value: string
+  ) => {
+    setCreateExperiences((prev) =>
       prev.map((exp, i) =>
         i === expIndex
           ? {
@@ -89,18 +140,28 @@ export default function ResumeEditable({
       const safeEducations = educations.map((edu) => ({
         ...edu,
         id: edu.id.toString(),
-        applicant_id: edu.applicant_id.toString(),
-      }))
-
-      const safeCreateEducations = createEducations.map((edu) => ({
-        ...edu,
-        applicant_id: edu.applicant_id.toString(),
       }))
 
       const safeDeleteEducations = deleteEducations.map((edu) => ({
         ...edu,
         id: edu.id.toString(),
-        applicant_id: edu.applicant_id.toString(),
+      }))
+
+      const safeDeleteResponsibilities = deleteResponsibilities.map((resp) => ({
+        ...resp,
+        experience_id: resp.experience_id.toString(),
+        id: resp.id.toString(),
+      }))
+
+      const safeDeleteExperiences = deleteExperiences.map((exp) => ({
+        ...exp,
+        id: exp.id.toString(),
+        applicant_id: exp.applicant_id.toString(),
+        responsibility: exp.responsibility.map((resp) => ({
+          ...resp,
+          id: resp.id.toString(),
+          experience_id: resp.experience_id.toString(),
+        })),
       }))
 
       const safeExperiences = experiences.map((exp) => ({
@@ -119,9 +180,12 @@ export default function ResumeEditable({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           educations: safeEducations,
-          createEducations: safeCreateEducations,
+          createEducations: createEducations,
           deleteEducations: safeDeleteEducations,
+          deleteResponsibilities: safeDeleteResponsibilities,
           experiences: safeExperiences,
+          deleteExperiences: safeDeleteExperiences,
+          createExperiences: createExperiences,
         }),
       })
 
@@ -159,6 +223,103 @@ export default function ResumeEditable({
       level: 'Degree Level',
     }
     setCreateEducations([...createEducations, newEducation])
+  }
+
+  const deleteExperience = (index: number) => {
+    const experiencesCopy = [...experiences]
+    const newDeleteExperience = experiencesCopy.splice(index, 1)
+    setExperiences(experiencesCopy)
+    setDeleteExperiences([...deleteExperiences, newDeleteExperience[0]])
+  }
+
+  const deleteNewExperience = (index: number) => {
+    const experiencesCopy = [...createExperiences]
+    experiencesCopy.splice(index, 1)
+    setCreateExperiences(experiencesCopy)
+  }
+
+  const createExperience = () => {
+    const newExperience: NewExperience = {
+      applicant_id: user.id,
+      start_date: new Date(),
+      end_date: null,
+      organization: '',
+      title: '',
+      responsibility: [
+        {
+          description: '',
+        },
+        {
+          description: '',
+        },
+        {
+          description: '',
+        },
+      ],
+    }
+    setCreateExperiences([...createExperiences, newExperience])
+  }
+
+  const deleteResponsibility = (expIndex: number, respIndex: number) => {
+    const newExperiences = experiences.map((experience, experienceIndex) => {
+      if (expIndex !== experienceIndex) return experience
+
+      const newResponsibility = [...experience['responsibility']]
+      const deleteResponsibility = newResponsibility.splice(respIndex, 1)
+      setDeleteResponsibilities([
+        ...deleteResponsibilities,
+        deleteResponsibility[0],
+      ])
+      return { ...experience, responsibility: newResponsibility }
+    })
+    setExperiences(newExperiences)
+  }
+
+  const deleteNewResponsibility = (expIndex: number, respIndex: number) => {
+    const newCreateExperiences: NewExperience[] = createExperiences.map(
+      (experience, experienceIndex) => {
+        if (expIndex !== experienceIndex) return experience
+
+        const newResponsibility = [...experience['responsibility']]
+        newResponsibility.splice(respIndex, 1)
+        return { ...experience, responsibility: newResponsibility }
+      }
+    )
+    setCreateExperiences(newCreateExperiences)
+  }
+
+  const createResponsibility = (expIndex: number, expID: bigint) => {
+    const newResponsibility = {
+      id: BigInt(-1),
+      experience_id: expID,
+      description: '',
+    }
+    const newExperiences = experiences.map((experience, experienceIndex) => {
+      if (expIndex !== experienceIndex) return experience
+
+      const newResponsibilities = [...experience['responsibility']]
+      newResponsibilities.push(newResponsibility)
+
+      return { ...experience, responsibility: newResponsibilities }
+    })
+    setExperiences(newExperiences)
+  }
+
+  const createNewResponsibility = (expIndex: number) => {
+    const newResponsibility = {
+      description: '',
+    }
+    const newExperiences = createExperiences.map(
+      (experience, experienceIndex) => {
+        if (expIndex !== experienceIndex) return experience
+
+        const newResponsibilities = [...experience['responsibility']]
+        newResponsibilities.push(newResponsibility)
+
+        return { ...experience, responsibility: newResponsibilities }
+      }
+    )
+    setCreateExperiences(newExperiences)
   }
 
   return (
@@ -316,7 +477,7 @@ export default function ResumeEditable({
       <ul>
         {experiences.map((experience, expIndex) => (
           <li key={experience.id.toString()} className='pb-4 mb-4 border-b-2'>
-            <div className='flex flex-row justify-between'>
+            <div className='flex flex-row flex-wrap justify-between'>
               <div>
                 <input
                   name='title'
@@ -337,6 +498,15 @@ export default function ResumeEditable({
                     )
                   }
                 />
+                <button
+                  className='bg-green-500 ml-2 px-1'
+                  type='button'
+                  onClick={() => {
+                    deleteExperience(expIndex)
+                  }}
+                >
+                  Delete Experience
+                </button>
               </div>
               <div>
                 <input
@@ -374,7 +544,7 @@ export default function ResumeEditable({
               experience.responsibility.length > 0 && (
                 <ul>
                   {experience.responsibility.map((resp, respIndex) => (
-                    <li key={resp.id.toString()} className='mt-2'>
+                    <li key={respIndex} className='mt-2 flex flex-row'>
                       <textarea
                         className='w-full'
                         value={resp.description}
@@ -386,14 +556,143 @@ export default function ResumeEditable({
                           )
                         }
                       />
+                      <button
+                        className='bg-green-500 ml-2 px-1'
+                        type='button'
+                        onClick={() => {
+                          deleteResponsibility(expIndex, respIndex)
+                        }}
+                      >
+                        Delete Resp.
+                      </button>
                     </li>
                   ))}
                 </ul>
               )}
+            <button
+              className='bg-green-500 my-1 px-2'
+              type='button'
+              onClick={() => createResponsibility(expIndex, experience.id)}
+            >
+              Add New Repsonsibility
+            </button>
           </li>
         ))}
       </ul>
-      <button className='bg-green-500 my-1 px-2' type='button'>
+      <ul>
+        {createExperiences.map((experience, expIndex) => (
+          <li key={expIndex} className='pb-4 mb-4 border-b-2'>
+            <div className='flex flex-row flex-wrap justify-between'>
+              <div>
+                <input
+                  name='title'
+                  value={experience.title}
+                  onChange={(e) =>
+                    handleNewExperienceChange(expIndex, 'title', e.target.value)
+                  }
+                />{' '}
+                at{' '}
+                <input
+                  name='organization'
+                  value={experience.organization}
+                  onChange={(e) =>
+                    handleNewExperienceChange(
+                      expIndex,
+                      'organization',
+                      e.target.value
+                    )
+                  }
+                />
+                <button
+                  className='bg-green-500 ml-2 px-1'
+                  type='button'
+                  onClick={() => {
+                    deleteNewExperience(expIndex)
+                  }}
+                >
+                  Delete Experience
+                </button>
+              </div>
+              <div>
+                <input
+                  type='date'
+                  name='start_date'
+                  value={
+                    new Date(experience.start_date).toISOString().split('T')[0]
+                  }
+                  onChange={(e) =>
+                    handleNewExperienceChange(
+                      expIndex,
+                      'start_date',
+                      e.target.value
+                    )
+                  }
+                />{' '}
+                -{' '}
+                <input
+                  type='date'
+                  name='end_date'
+                  value={
+                    experience.end_date
+                      ? new Date(experience.end_date)
+                          .toISOString()
+                          .split('T')[0]
+                      : ''
+                  }
+                  onChange={(e) =>
+                    handleNewExperienceChange(
+                      expIndex,
+                      'end_date',
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+            </div>
+            {experience.responsibility &&
+              experience.responsibility.length > 0 && (
+                <ul>
+                  {experience.responsibility.map((resp, respIndex) => (
+                    <li key={respIndex} className='mt-2 flex flex-row'>
+                      <textarea
+                        className='w-full'
+                        value={resp.description}
+                        onChange={(e) =>
+                          handleNewResponsibilityChange(
+                            expIndex,
+                            respIndex,
+                            e.target.value
+                          )
+                        }
+                      />
+                      <button
+                        className='bg-green-500 ml-2 px-1'
+                        type='button'
+                        onClick={() => {
+                          deleteNewResponsibility(expIndex, respIndex)
+                        }}
+                      >
+                        Delete Resp.
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            <button
+              className='bg-green-500 my-1 px-2'
+              type='button'
+              onClick={() => createNewResponsibility(expIndex)}
+            >
+              Add New Repsonsibility
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button
+        className='bg-green-500 my-1 px-2'
+        type='button'
+        onClick={createExperience}
+      >
         Add New Experience
       </button>
       <br />
