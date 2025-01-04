@@ -9,15 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.2.4",
     "@prisma/client": "^6.1.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "next": "15.1.2",
+    "next-auth": "^4.24.11",
+    "nodemailer": "^6.9.16",
     "prisma": "^6.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "resend": "^4.0.1",
     "vercel": "^39.2.2"
   },
   "devDependencies": {

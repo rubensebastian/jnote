@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
+import crypto from 'crypto'
+import { sendVerificationEmail } from '@/lib/email'
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -15,9 +17,19 @@ export async function POST(request: Request) {
   try {
     const password_hash = await bcrypt.hash(password, 10)
 
+    const verificationToken = crypto.randomBytes(32).toString('hex')
+
     const applicant = await prisma.applicant.create({
-      data: { username, email, password_hash },
+      data: {
+        username,
+        email,
+        password_hash,
+        verified: false,
+        verification_token: verificationToken,
+      },
     })
+
+    await sendVerificationEmail(email, verificationToken)
 
     if (!JWT_SECRET) {
       return NextResponse.json(
@@ -35,7 +47,7 @@ export async function POST(request: Request) {
     )
 
     const response = NextResponse.json(
-      { message: 'User created', applicant },
+      { message: 'User created, verification email sent', applicant },
       { status: 201 }
     )
     response.cookies.set('token', token, {
