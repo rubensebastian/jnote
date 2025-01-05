@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
 
@@ -14,12 +14,6 @@ export async function POST(req: Request) {
       createExperiences,
       deleteExperiences,
     } = data
-
-    //separate edited, deleted, and newly created
-    //edited should update
-    //new should add with auto ids
-    //handle createExperiences, which don't have IDs
-    //handle resp. of createExperiences, which need to be linked to corresponding createExperiences
 
     for (const edu of educations) {
       await prisma.education.update({

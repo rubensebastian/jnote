@@ -1,11 +1,9 @@
-import prisma from '@/lib/prisma'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import JobList from '@/components/JobList'
-import Link from 'next/link'
+import { cookies } from 'next/headers'
+import { redirect } from 'react-router-dom'
+import AddJobForm from '@/components/AddJobForm'
 
-export default async function Jobs() {
+export default async function AddJob() {
   const cookieStore = await cookies()
   const token = cookieStore.get('token')?.value
   const JWT_SECRET = process.env.JWT_SECRET
@@ -30,22 +28,13 @@ export default async function Jobs() {
   if (!user) {
     redirect('/')
   } else {
-    const jobs = await prisma.job.findMany({
-      where: { applicant_id: user.id },
-      include: {
-        jobDescription: true,
-        jobEducation: true,
-        jobResponsibility: true,
-      },
-    })
-
     return (
       <main className='max-w-4xl mx-auto p-4'>
-        <h1 className='text-center'>Saved Jobs</h1>
-        <JobList initialJobs={jobs} />
-        <Link href='/jobs/add' className='underline'>
-          Add a New Job →
-        </Link>
+        <h1 className='text-center'>Add New Job</h1>
+        <code>
+          Don&apos;t want to deal with this? Use our extension/plugin instead
+        </code>
+        <AddJobForm user={user} />
       </main>
     )
   }
