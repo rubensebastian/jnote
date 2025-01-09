@@ -1,4 +1,4 @@
-import { pipeline, DataArray } from '@huggingface/transformers'
+import { DataArray } from '@huggingface/transformers'
 
 function dotProduct(vecA: DataArray, vecB: DataArray) {
   let product = 0
@@ -18,10 +18,4 @@ function magnitude(vec: DataArray) {
 
 export function cosineSimilarity(vecA: DataArray, vecB: DataArray) {
   return dotProduct(vecA, vecB) / (magnitude(vecA) * magnitude(vecB))
-}
-
-export async function generateEmbedding(text: string) {
-  const pipe = await pipeline('embeddings')
-  const embedding = await pipe(text)
-  return embedding.data
 }

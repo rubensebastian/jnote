@@ -1,7 +1,8 @@
 'use client'
 
 import { Prisma } from '@prisma/client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Document } from 'docx'
 
 type JobWithChildren = Prisma.jobGetPayload<{
   include: { jobDescription: true; jobEducation: true; jobResponsibility: true }
@@ -48,6 +49,41 @@ export default function JobList({
     setJobs(newJobs)
   }
 
+  const generateEmbedding = async (job: JobWithChildren) => {
+    const safeJob = {
+      ...job,
+      id: job.id.toString(),
+      jobDescription: job.jobDescription.map((desc) => ({
+        ...desc,
+        id: desc.id.toString(),
+        job_id: desc.job_id.toString(),
+      })),
+      jobEducation: job.jobEducation.map((edu) => ({
+        ...edu,
+        id: edu.id.toString(),
+        job_id: edu.job_id.toString(),
+      })),
+      jobResponsibility: job.jobResponsibility.map((resp) => ({
+        ...resp,
+        id: resp.id.toString(),
+        job_id: resp.job_id.toString(),
+      })),
+    }
+    const response = await fetch('/api/jobs/optimize-resume', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        job: safeJob,
+      }),
+    })
+    if (!response.ok) {
+      const result = await response.json()
+      throw new Error(result.error || 'Failed to optimize resume')
+    }
+    const result = await response.json()
+    console.log(result)
+  }
+
   return (
     <>
       {jobs.map((job, jobIndex) => {
@@ -60,15 +96,23 @@ export default function JobList({
                 type='button'
                 onClick={() => toggleDetails(jobIndex)}
               >
-                {showDetails[jobIndex] == 'hidden' ? 'Show' : 'Hide'} details
-                for {job.title}
+                {showDetails[jobIndex] == 'hidden' ? 'Show' : 'Hide'} Job
+                Details
+                <span className='sr-only'> for {job.title}</span>
               </button>
               <button
                 className='bg-purple-600 my-1 ml-2 px-2'
                 type='button'
                 onClick={() => deleteJob(job.id, jobIndex)}
               >
-                Delete {job.title}
+                Delete Job<span className='sr-only'> {job.title}</span>
+              </button>
+              <button
+                className='bg-blue-500 my-1 ml-2 px-2'
+                type='button'
+                onClick={() => generateEmbedding(jobs[jobIndex])}
+              >
+                Optimize Resume<span className='sr-only'> for {job.title}</span>
               </button>
             </div>
             <div className={showDetails[jobIndex]}>
