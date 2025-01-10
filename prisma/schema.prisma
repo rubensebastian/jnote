@@ -25,6 +25,7 @@ model applicant {
   created_at    DateTime?    @default(now()) @db.Timestamp(6)
   verified      Boolean      @default(false)
   verification_token String?  @unique
+  number_of_generates Int
   education     education[]
   experience    experience[]
   jobs          job[]

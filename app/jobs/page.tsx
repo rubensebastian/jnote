@@ -39,10 +39,21 @@ export default async function Jobs() {
       },
     })
 
+    const applicant = await prisma.applicant.findUnique({
+      where: { id: user.id },
+    })
+
+    if (!applicant) {
+      redirect('/')
+    }
+
     return (
       <main className='max-w-4xl mx-auto p-4'>
         <h1 className='text-center'>Saved Jobs</h1>
-        <JobList initialJobs={jobs} />
+        <JobList
+          initialJobs={jobs}
+          numberOfGenerates={applicant.number_of_generates}
+        />
         <Link href='/jobs/add' className='underline'>
           Add a New Job →
         </Link>

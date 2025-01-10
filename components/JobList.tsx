@@ -10,8 +10,10 @@ type JobWithChildren = Prisma.jobGetPayload<{
 
 export default function JobList({
   initialJobs,
+  numberOfGenerates,
 }: {
   initialJobs: JobWithChildren[]
+  numberOfGenerates: number
 }) {
   const details: string[] = []
   for (let job of initialJobs) {
@@ -20,6 +22,7 @@ export default function JobList({
 
   const [jobs, setJobs] = useState(initialJobs)
   const [showDetails, setShowDetails] = useState(details)
+  const [numberGenerates, setNumberGenerates] = useState(numberOfGenerates)
 
   const toggleDetails = (jobIndex: number) => {
     const newDetailsCopy = showDetails.map((detail, detailIndex) => {
@@ -50,6 +53,10 @@ export default function JobList({
   }
 
   const generateEmbedding = async (job: JobWithChildren) => {
+    if (numberGenerates < 1) {
+      alert("You don't have any free resume optimizations this month ):")
+      return
+    }
     const safeJob = {
       ...job,
       id: job.id.toString(),
@@ -78,9 +85,13 @@ export default function JobList({
     })
     if (!response.ok) {
       const result = await response.json()
-      throw new Error(result.error || 'Failed to optimize resume')
+      alert(result.error)
+      return
     }
+    setNumberGenerates((prev) => prev - 1)
     const result = await response.json()
+    //generate optimized resume here
+    //result.weightedEducations and result.weightedExperiences
     console.log(result)
   }
 
