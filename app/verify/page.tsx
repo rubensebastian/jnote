@@ -1,9 +1,9 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 
-export default function Verify() {
+function VerifyContent() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const [message, setMessage] = useState('Verifying...')
@@ -26,5 +26,13 @@ export default function Verify() {
       </h2>
       <p>{message}</p>
     </div>
+  )
+}
+
+export default function Verify() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyContent />
+    </Suspense>
   )
 }
