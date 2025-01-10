@@ -18,7 +18,7 @@ export default function JobList({
   fullName: string
 }) {
   const details: string[] = []
-  for (let job of initialJobs) {
+  for (let i = 0; i < initialJobs.length; i++) {
     details.push('hidden')
   }
 

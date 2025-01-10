@@ -61,8 +61,14 @@ export async function POST(request: Request) {
 
     return response
   } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 500 }
+      )
+    }
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { success: false, error: 'Unknown error occurred' },
       { status: 500 }
     )
   }

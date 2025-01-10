@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 const SignupForm = () => {
   const [formData, setFormData] = useState({
     username: '',
+    full_name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -58,6 +59,16 @@ const SignupForm = () => {
           placeholder='Email'
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className='w-full p-2 mb-4 border rounded-lg'
+          required
+        />
+        <input
+          type='text'
+          placeholder='Full Name'
+          value={formData.full_name}
+          onChange={(e) =>
+            setFormData({ ...formData, full_name: e.target.value })
+          }
           className='w-full p-2 mb-4 border rounded-lg'
           required
         />

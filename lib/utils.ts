@@ -4,7 +4,6 @@ import {
   Packer,
   Paragraph,
   HeadingLevel,
-  AlignmentType,
   PageOrientation,
 } from 'docx'
 import { saveAs } from 'file-saver'

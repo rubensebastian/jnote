@@ -8,7 +8,7 @@ import { sendVerificationEmail } from '@/lib/email'
 const JWT_SECRET = process.env.JWT_SECRET
 
 export async function POST(request: Request) {
-  const { username, email, password } = await request.json()
+  const { username, email, password, full_name } = await request.json()
 
   if (!username || !email || !password) {
     return NextResponse.json({ message: 'Missing fields' }, { status: 400 })
@@ -23,7 +23,9 @@ export async function POST(request: Request) {
       data: {
         username,
         email,
+        full_name,
         password_hash,
+        number_of_generates: 5,
         verified: false,
         verification_token: verificationToken,
       },

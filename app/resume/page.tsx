@@ -21,7 +21,7 @@ export default async function Resume() {
       ) {
         user = decoded as JwtPayload
       }
-    } catch (error) {
+    } catch {
       redirect('/')
     }
   }

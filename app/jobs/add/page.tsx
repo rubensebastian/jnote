@@ -20,7 +20,7 @@ export default async function AddJob() {
       ) {
         user = decoded as JwtPayload
       }
-    } catch (error) {
+    } catch {
       redirect('/')
     }
   }

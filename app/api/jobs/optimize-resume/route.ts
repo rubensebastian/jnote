@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     })
 
     const educationsWithEmbeddings: EducationWithEmbedding[] = []
-    for (let jobEdu of job.jobEducation) {
+    for (const jobEdu of job.jobEducation) {
       const embedding = (
         await pipe(jobEdu.field, { pooling: 'mean', normalize: true })
       ).data
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     }
 
     const weightedEducations: WeightedEducation[] = []
-    for (let edu of educations) {
+    for (const edu of educations) {
       const newField = edu.level + ' of ' + edu.field
       const weightedEducation: WeightedEducation = {
         id: edu.id.toString(),
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       const eduEmbedding = (
         await pipe(newField, { pooling: 'mean', normalize: true })
       ).data
-      for (let eduWithEmbed of educationsWithEmbeddings) {
+      for (const eduWithEmbed of educationsWithEmbeddings) {
         const similarityScore = cosineSimilarity(
           eduEmbedding,
           eduWithEmbed.embedding
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
     }
 
     const responsibilitiesWithEmbeddings: ResponsibilityWithEmbedding[] = []
-    for (let jobResp of job.jobResponsibility) {
+    for (const jobResp of job.jobResponsibility) {
       const embedding = (
         await pipe(jobResp.description, { pooling: 'mean', normalize: true })
       ).data
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
     }
 
     const descriptionsWithEmbeddings: DescriptionWithEmbedding[] = []
-    for (let jobDesc of job.jobDescription) {
+    for (const jobDesc of job.jobDescription) {
       const embedding = (
         await pipe(jobDesc.description, { pooling: 'mean', normalize: true })
       ).data
@@ -134,13 +134,13 @@ export async function POST(req: NextRequest) {
     }
 
     const weightedExperiences: WeightedExperience[] = []
-    for (let exp of experiences) {
+    for (const exp of experiences) {
       const weightedExperience: WeightedExperience = {
         id: exp.id.toString(),
         title: exp.title,
         weightedResponsibilities: [],
       }
-      for (let resp of exp.responsibility) {
+      for (const resp of exp.responsibility) {
         const weightedResponsibility: WeightedResponsibility = {
           id: resp.id.toString(),
           weight: 0,
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
         const respEmbedding = (
           await pipe(resp.description, { pooling: 'mean', normalize: true })
         ).data
-        for (let respWithEmbed of responsibilitiesWithEmbeddings) {
+        for (const respWithEmbed of responsibilitiesWithEmbeddings) {
           const similarityScore = cosineSimilarity(
             respEmbedding,
             respWithEmbed.embedding
@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
             similarityScore *
             (respWithEmbed.required == 'REQUIRED' ? 1 : preferredWeight)
         }
-        for (let descWithEmbed of descriptionsWithEmbeddings) {
+        for (const descWithEmbed of descriptionsWithEmbeddings) {
           const similarityScore = cosineSimilarity(
             respEmbedding,
             descWithEmbed.embedding
