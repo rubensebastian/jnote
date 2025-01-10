@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { redirect } from 'react-router-dom'
+import { redirect } from 'next/navigation'
 import AddJobForm from '@/components/AddJobForm'
 
 export default async function AddJob() {
