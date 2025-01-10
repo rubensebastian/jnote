@@ -26,7 +26,7 @@ const LoginForm = () => {
   }
 
   return (
-    <div className='w-full max-w-md mx-auto p-4 bg-white rounded-lg shadow-md'>
+    <div className='w-full max-w-md mx-auto p-4 bg-slate-800 rounded-lg shadow-md'>
       <h2 className='text-xl font-semibold text-center mb-4'>Log In</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -49,7 +49,7 @@ const LoginForm = () => {
         />
         <button
           type='submit'
-          className='w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600'
+          className='w-full bg-green-500 text-white p-2 rounded-lg hover:bg-blue-600'
         >
           Log In
         </button>

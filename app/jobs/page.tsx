@@ -53,6 +53,7 @@ export default async function Jobs() {
         <JobList
           initialJobs={jobs}
           numberOfGenerates={applicant.number_of_generates}
+          fullName={applicant.full_name}
         />
         <Link href='/jobs/add' className='underline'>
           Add a New Job →

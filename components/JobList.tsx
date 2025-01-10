@@ -1,8 +1,8 @@
 'use client'
 
 import { Prisma } from '@prisma/client'
-import { useState, useEffect, useRef } from 'react'
-import { Document } from 'docx'
+import { useState } from 'react'
+import { generateWordDocument } from '@/lib/utils'
 
 type JobWithChildren = Prisma.jobGetPayload<{
   include: { jobDescription: true; jobEducation: true; jobResponsibility: true }
@@ -11,9 +11,11 @@ type JobWithChildren = Prisma.jobGetPayload<{
 export default function JobList({
   initialJobs,
   numberOfGenerates,
+  fullName,
 }: {
   initialJobs: JobWithChildren[]
   numberOfGenerates: number
+  fullName: string
 }) {
   const details: string[] = []
   for (let job of initialJobs) {
@@ -76,6 +78,7 @@ export default function JobList({
         job_id: resp.job_id.toString(),
       })),
     }
+
     const response = await fetch('/api/jobs/optimize-resume', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -83,6 +86,7 @@ export default function JobList({
         job: safeJob,
       }),
     })
+
     if (!response.ok) {
       const result = await response.json()
       alert(result.error)
@@ -90,9 +94,12 @@ export default function JobList({
     }
     setNumberGenerates((prev) => prev - 1)
     const result = await response.json()
-    //generate optimized resume here
-    //result.weightedEducations and result.weightedExperiences
     console.log(result)
+    await generateWordDocument(
+      fullName,
+      result.weightedExperiences,
+      result.weightedEducations
+    )
   }
 
   return (

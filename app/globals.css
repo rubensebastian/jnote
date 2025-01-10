@@ -9,7 +9,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #1c1c1c;
     --foreground: #ededed;
   }
 }
@@ -22,11 +22,11 @@ body {
 
 input,
 textarea {
-  color: #0a0a0a;
+  color: #1c1c1c;
   padding-left: 0.25em;
   border-radius: 0.25em;
 }
 
 button {
-  color: #0a0a0a;
+  color: #1c1c1c;
 }
