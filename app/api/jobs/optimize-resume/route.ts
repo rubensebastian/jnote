@@ -1,48 +1,6 @@
-import { pipeline, DataArray } from '@huggingface/transformers'
 import { NextResponse, NextRequest } from 'next/server'
-import { cosineSimilarity } from '@/lib/utils'
 import prisma from '@/lib/prisma'
-
-const pipe = await pipeline('feature-extraction')
-
-type ResponsibilityWithEmbedding = {
-  description: string
-  required: 'REQUIRED' | 'PREFERRED'
-  embedding: DataArray
-}
-
-type DescriptionWithEmbedding = {
-  description: string
-  embedding: DataArray
-}
-
-type EducationWithEmbedding = {
-  field: string
-  required: 'REQUIRED' | 'PREFERRED'
-  embedding: DataArray
-}
-
-type WeightedResponsibility = {
-  id: string
-  weight: number
-  description: string
-}
-
-type WeightedExperience = {
-  id: string
-  title: string
-  weightedResponsibilities: WeightedResponsibility[]
-}
-
-type WeightedEducation = {
-  id: string
-  field: string
-  institution: string
-  weight: number
-}
-
-const preferredWeight = 0.75
-const descriptionWeight = 0.5
+import { fetchGeneratedEmbeddings } from '@/lib/server'
 
 export async function POST(req: NextRequest) {
   try {
@@ -74,102 +32,45 @@ export async function POST(req: NextRequest) {
     }
 
     const educations = await prisma.education.findMany({
-      where: { applicant_id: userID },
+      where: { applicant_id: Number(userID) },
     })
     const experiences = await prisma.experience.findMany({
-      where: { applicant_id: userID },
+      where: { applicant_id: Number(userID) },
       include: { responsibility: true },
     })
 
-    const educationsWithEmbeddings: EducationWithEmbedding[] = []
-    for (const jobEdu of job.jobEducation) {
-      const embedding = (
-        await pipe(jobEdu.field, { pooling: 'mean', normalize: true })
-      ).data
-      educationsWithEmbeddings.push({ ...jobEdu, embedding: embedding })
+    if (!educations || !experiences) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "You don't have resume data. Try adding some.",
+        },
+        { status: 500 }
+      )
     }
 
-    const weightedEducations: WeightedEducation[] = []
-    for (const edu of educations) {
-      const newField = edu.level + ' of ' + edu.field
-      const weightedEducation: WeightedEducation = {
-        id: edu.id.toString(),
-        field: newField,
-        institution: edu.institution,
-        weight: 0,
-      }
-      const eduEmbedding = (
-        await pipe(newField, { pooling: 'mean', normalize: true })
-      ).data
-      for (const eduWithEmbed of educationsWithEmbeddings) {
-        const similarityScore = cosineSimilarity(
-          eduEmbedding,
-          eduWithEmbed.embedding
-        )
+    const safeEducations = educations.map((edu) => ({
+      ...edu,
+      id: edu.id.toString(),
+    }))
 
-        weightedEducation.weight +=
-          similarityScore *
-          (eduWithEmbed.required == 'REQUIRED' ? 1 : preferredWeight)
-      }
-      weightedEducations.push(weightedEducation)
-    }
+    const safeExperiences = experiences.map((exp) => ({
+      ...exp,
+      id: exp.id.toString(),
+      responsibility: exp.responsibility.map((resp) => ({
+        ...resp,
+        id: resp.id.toString(),
+        experience_id: resp.experience_id.toString(),
+      })),
+    }))
 
-    const responsibilitiesWithEmbeddings: ResponsibilityWithEmbedding[] = []
-    for (const jobResp of job.jobResponsibility) {
-      const embedding = (
-        await pipe(jobResp.description, { pooling: 'mean', normalize: true })
-      ).data
-      responsibilitiesWithEmbeddings.push({ ...jobResp, embedding: embedding })
-    }
-
-    const descriptionsWithEmbeddings: DescriptionWithEmbedding[] = []
-    for (const jobDesc of job.jobDescription) {
-      const embedding = (
-        await pipe(jobDesc.description, { pooling: 'mean', normalize: true })
-      ).data
-      descriptionsWithEmbeddings.push({
-        description: jobDesc.description,
-        embedding: embedding,
-      })
-    }
-
-    const weightedExperiences: WeightedExperience[] = []
-    for (const exp of experiences) {
-      const weightedExperience: WeightedExperience = {
-        id: exp.id.toString(),
-        title: exp.title,
-        weightedResponsibilities: [],
-      }
-      for (const resp of exp.responsibility) {
-        const weightedResponsibility: WeightedResponsibility = {
-          id: resp.id.toString(),
-          weight: 0,
-          description: resp.description,
-        }
-
-        const respEmbedding = (
-          await pipe(resp.description, { pooling: 'mean', normalize: true })
-        ).data
-        for (const respWithEmbed of responsibilitiesWithEmbeddings) {
-          const similarityScore = cosineSimilarity(
-            respEmbedding,
-            respWithEmbed.embedding
-          )
-          weightedResponsibility.weight +=
-            similarityScore *
-            (respWithEmbed.required == 'REQUIRED' ? 1 : preferredWeight)
-        }
-        for (const descWithEmbed of descriptionsWithEmbeddings) {
-          const similarityScore = cosineSimilarity(
-            respEmbedding,
-            descWithEmbed.embedding
-          )
-          weightedResponsibility.weight += similarityScore * descriptionWeight
-        }
-        weightedExperience.weightedResponsibilities.push(weightedResponsibility)
-      }
-      weightedExperiences.push(weightedExperience)
-    }
+    const jobData = await fetchGeneratedEmbeddings(
+      job.jobEducation,
+      safeEducations,
+      job.jobDescription,
+      job.jobResponsibility,
+      safeExperiences
+    )
 
     await prisma.applicant.update({
       where: { id: Number(userID) },
@@ -180,8 +81,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      weightedExperiences,
-      weightedEducations,
+      weightedExperiences: jobData.weightedExperiences,
+      weightedEducations: jobData.weightedEducations,
       message: `You have ${
         applicant.number_of_generates - 1
       } resume optimizations remaining this month`,

@@ -1,4 +1,3 @@
-import { DataArray } from '@huggingface/transformers'
 import {
   Document,
   Packer,
@@ -32,10 +31,8 @@ export async function generateWordDocument(
   experiences: Experience[],
   educations: Education[]
 ): Promise<void> {
-  // Prepare content for the document
   const children: Paragraph[] = []
 
-  // Add username as H1 with adjusted spacing
   children.push(
     new Paragraph({
       text: username,
@@ -125,24 +122,4 @@ export async function generateWordDocument(
     type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   })
   saveAs(blob, 'Resume.docx')
-}
-
-function dotProduct(vecA: DataArray, vecB: DataArray) {
-  let product = 0
-  for (let i = 0; i < vecA.length; i++) {
-    product += vecA[i] * vecB[i]
-  }
-  return product
-}
-
-function magnitude(vec: DataArray) {
-  let sum = 0
-  for (let i = 0; i < vec.length; i++) {
-    sum += vec[i] * vec[i]
-  }
-  return Math.sqrt(sum)
-}
-
-export function cosineSimilarity(vecA: DataArray, vecB: DataArray) {
-  return dotProduct(vecA, vecB) / (magnitude(vecA) * magnitude(vecB))
 }

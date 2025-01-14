@@ -18,6 +18,7 @@ const LoginForm = () => {
     })
 
     const data = await res.json()
+    console.log(data)
     if (data.token) {
       router.push('/jobs')
     } else {

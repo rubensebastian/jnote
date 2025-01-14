@@ -94,7 +94,7 @@ export default function JobList({
     }
     setNumberGenerates((prev) => prev - 1)
     const result = await response.json()
-    console.log(result)
+
     await generateWordDocument(
       fullName,
       result.weightedExperiences,
