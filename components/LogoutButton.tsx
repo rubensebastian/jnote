@@ -16,7 +16,7 @@ export default function LogoutButton() {
         alert('Failed to logout')
       }
     } catch (error) {
-      alert('Failed to logout')
+      alert(error)
     }
   }
 
