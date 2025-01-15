@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
     if (!JWT_SECRET) {
       return NextResponse.json(
-        { message: 'Internal server error' },
+        { message: 'Internal server error JWT Secret' },
         { status: 500 }
       )
     }
