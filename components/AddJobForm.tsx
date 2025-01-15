@@ -25,9 +25,9 @@ type JobResponsibility = {
   required: 'REQUIRED' | 'PREFERRED'
 }
 
-export default function AddJobForm(user: JwtPayload) {
+export default function AddJobForm({ userID }: { userID: number }) {
   const [job, setJob] = useState<Job>({
-    applicant_id: user.id,
+    applicant_id: userID,
     organization: '',
     title: '',
     applied_at: null,

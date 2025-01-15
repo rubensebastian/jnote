@@ -36,7 +36,7 @@ export default async function AddJob() {
           Want to add jobs as you browse the web? Use our extension/plugin
           instead!
         </aside>
-        <AddJobForm user={user} />
+        <AddJobForm userID={user.id} />
         <Link href={'/jobs'} className='bg-green-500 px-2 mt-2'>
           Go back to Jobs
         </Link>
