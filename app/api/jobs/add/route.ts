@@ -30,6 +30,8 @@ export async function POST(req: NextRequest) {
     await prisma.job_responsibility.createMany({
       data: jobResponsibilities,
     })
+
+    return NextResponse.json({ success: true })
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
