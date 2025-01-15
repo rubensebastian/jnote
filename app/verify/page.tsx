@@ -1,18 +1,19 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 
 function VerifyContent() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const [message, setMessage] = useState('Verifying...')
+  const router = useRouter()
 
   useEffect(() => {
     if (token) {
       fetch(`/api/auth/verify?token=${token}`)
         .then((res) => res.json())
-        .then((data) => setMessage(data.message))
+        .then(() => router.push('/jobs'))
         .catch(() => setMessage('Verification failed.'))
     } else {
       setMessage('Invalid verification link.')

@@ -50,7 +50,12 @@ export default async function Jobs() {
 
     return (
       <main className='max-w-4xl mx-auto p-4'>
-        <h1 className='text-center'>Saved Jobs</h1>
+        <div className='flex flex-row'>
+          <h1>Saved Jobs</h1>
+          <Link href={'/resume'} className='bg-green-500 px-2'>
+            Go to Resume
+          </Link>
+        </div>
         <JobList
           initialJobs={jobs}
           numberOfGenerates={applicant.number_of_generates}

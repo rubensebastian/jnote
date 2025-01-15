@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import Link from 'next/link'
+import LogoutButton from '@/components/LogoutButton'
 
 export default async function Resume() {
   const cookieStore = await cookies()
@@ -105,6 +106,7 @@ export default async function Resume() {
             </li>
           ))}
         </ul>
+        <LogoutButton />
       </main>
     )
   }

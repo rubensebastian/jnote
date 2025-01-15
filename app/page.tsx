@@ -23,7 +23,10 @@ export default async function Home() {
   }
 
   return (
-    <main className='h-screen flex flex-col items-center justify-center'>
+    <main
+      id='main-page'
+      className='h-screen flex flex-col items-center justify-center'
+    >
       <h1 className='text-5xl font-semibold'>JobNote</h1>
       <div className='my-6'>
         <Link

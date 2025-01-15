@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import AddJobForm from '@/components/AddJobForm'
+import Link from 'next/link'
 
 export default async function AddJob() {
   const cookieStore = await cookies()
@@ -31,10 +32,14 @@ export default async function AddJob() {
     return (
       <main className='max-w-4xl mx-auto p-4'>
         <h1 className='text-center'>Add New Job</h1>
-        <code>
-          Don&apos;t want to deal with this? Use our extension/plugin instead
-        </code>
+        <aside>
+          Want to add jobs as you browse the web? Use our extension/plugin
+          instead!
+        </aside>
         <AddJobForm user={user} />
+        <Link href={'/jobs'} className='bg-green-500 px-2 mt-2'>
+          Go back to Jobs
+        </Link>
       </main>
     )
   }
