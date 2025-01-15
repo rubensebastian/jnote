@@ -1,6 +1,5 @@
 'use client'
 
-import { JwtPayload } from 'jsonwebtoken'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
