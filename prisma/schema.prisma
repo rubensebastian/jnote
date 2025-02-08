@@ -17,6 +17,12 @@ enum Required {
   PREFERRED
 }
 
+enum Plan {
+  STANDARD
+  PRO
+  PREMIUM
+}
+
 model applicant {
   id            Int          @id @default(autoincrement())
   username      String       @unique @db.VarChar(50)
@@ -27,6 +33,7 @@ model applicant {
   verified      Boolean      @default(false)
   verification_token String?  @unique
   number_of_generates Int
+  account_level Plan     @default(STANDARD)
   education     education[]
   experience    experience[]
   jobs          job[]

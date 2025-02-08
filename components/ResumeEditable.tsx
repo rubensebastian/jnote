@@ -368,9 +368,9 @@ export default function ResumeEditable({
                 <input
                   type='date'
                   name='start_date'
-                  value={
-                    new Date(education.start_date).toISOString().split('T')[0]
-                  }
+                  value={new Date(education.start_date)
+                    .toISOString()
+                    .slice(0, 10)}
                   onChange={(e) =>
                     handleEducationChange(index, 'start_date', e.target.value)
                   }
@@ -381,7 +381,7 @@ export default function ResumeEditable({
                   name='end_date'
                   value={
                     education.end_date
-                      ? new Date(education.end_date).toISOString().split('T')[0]
+                      ? new Date(education.end_date).toISOString().slice(0, 10)
                       : ''
                   }
                   onChange={(e) =>
@@ -436,9 +436,9 @@ export default function ResumeEditable({
                 <input
                   type='date'
                   name='start_date'
-                  value={
-                    new Date(education.start_date).toISOString().split('T')[0]
-                  }
+                  value={new Date(education.start_date)
+                    .toISOString()
+                    .slice(0, 10)}
                   onChange={(e) =>
                     handleNewEducationChange(
                       index,
@@ -453,7 +453,7 @@ export default function ResumeEditable({
                   name='end_date'
                   value={
                     education.end_date
-                      ? new Date(education.end_date).toISOString().split('T')[0]
+                      ? new Date(education.end_date).toISOString().slice(0, 10)
                       : ''
                   }
                   onChange={(e) =>
@@ -512,9 +512,9 @@ export default function ResumeEditable({
                 <input
                   type='date'
                   name='start_date'
-                  value={
-                    new Date(experience.start_date).toISOString().split('T')[0]
-                  }
+                  value={new Date(experience.start_date)
+                    .toISOString()
+                    .slice(0, 10)}
                   onChange={(e) =>
                     handleExperienceChange(
                       expIndex,
@@ -529,9 +529,7 @@ export default function ResumeEditable({
                   name='end_date'
                   value={
                     experience.end_date
-                      ? new Date(experience.end_date)
-                          .toISOString()
-                          .split('T')[0]
+                      ? new Date(experience.end_date).toISOString().slice(0, 10)
                       : ''
                   }
                   onChange={(e) =>
@@ -617,9 +615,9 @@ export default function ResumeEditable({
                 <input
                   type='date'
                   name='start_date'
-                  value={
-                    new Date(experience.start_date).toISOString().split('T')[0]
-                  }
+                  value={new Date(experience.start_date)
+                    .toISOString()
+                    .slice(0, 10)}
                   onChange={(e) =>
                     handleNewExperienceChange(
                       expIndex,
@@ -634,9 +632,7 @@ export default function ResumeEditable({
                   name='end_date'
                   value={
                     experience.end_date
-                      ? new Date(experience.end_date)
-                          .toISOString()
-                          .split('T')[0]
+                      ? new Date(experience.end_date).toISOString().slice(0, 10)
                       : ''
                   }
                   onChange={(e) =>

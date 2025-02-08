@@ -9,19 +9,13 @@ type Job = {
   title: string
   applied_at: Date | null
 }
-type JobDescription = {
-  description: string
-  order: number
-}
 
-type JobEducation = {
-  field: string
-  required: 'REQUIRED' | 'PREFERRED'
-}
-
-type JobResponsibility = {
-  description: string
-  required: 'REQUIRED' | 'PREFERRED'
+type JobDetails = {
+  descriptions: string
+  requiredEducation: string
+  preferredEducation: string
+  requiredResponsibilities: string
+  preferredResponsibilities: string
 }
 
 export default function AddJobForm({ userID }: { userID: number }) {
@@ -31,96 +25,26 @@ export default function AddJobForm({ userID }: { userID: number }) {
     title: '',
     applied_at: null,
   })
-  const [jobDescriptions, setJobDescriptions] = useState<JobDescription[]>([
-    {
-      description: '',
-      order: 0,
-    },
-    {
-      description: '',
-      order: 1,
-    },
-  ])
-  const [jobEducations, setJobEducations] = useState<JobEducation[]>([
-    {
-      field: '',
-      required: 'REQUIRED',
-    },
-  ])
-  const [jobResponsibilities, setJobResponsibilities] = useState<
-    JobResponsibility[]
-  >([
-    {
-      description: '',
-      required: 'REQUIRED',
-    },
-    {
-      description: '',
-      required: 'REQUIRED',
-    },
-  ])
-  const [errorMessage, setErrorMessage] = useState('')
 
+  const [jobDetails, setJobDetails] = useState<JobDetails>({
+    descriptions: '',
+    requiredEducation: '',
+    preferredEducation: '',
+    requiredResponsibilities: '',
+    preferredResponsibilities: '',
+  })
+
+  const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
 
-  const handleJobChange = (field: string, value: any) => {
-    const newJob = { ...job, [field]: value }
-    setJob(newJob)
+  const handleJobChange = (field: keyof Job, value: any) => {
+    setJob((prev) => ({ ...prev, [field]: value }))
   }
-  const handleJobDescriptionChange = (
-    descIndex: number,
-    field: string,
-    value: any
-  ) => {
-    const newJobDescriptions = jobDescriptions.map((description, index) => {
-      if (descIndex !== index) return description
 
-      return { ...description, [field]: value }
-    })
-    setJobDescriptions(newJobDescriptions)
+  const handleJobDetailsChange = (field: keyof JobDetails, value: any) => {
+    setJobDetails((prev) => ({ ...prev, [field]: value }))
   }
-  const handleJobEducationChange = (
-    eduIndex: number,
-    field: string,
-    value: any
-  ) => {
-    if (field === 'required') {
-      if (value) {
-        value = 'REQUIRED'
-      } else {
-        value = 'PREFERRED'
-      }
-    }
 
-    const newJobEducations = jobEducations.map((education, index) => {
-      if (eduIndex !== index) return education
-
-      return { ...education, [field]: value }
-    })
-    setJobEducations(newJobEducations)
-  }
-  const handleJobResponsibilityChange = (
-    respIndex: number,
-    field: string,
-    value: any
-  ) => {
-    if (field === 'required') {
-      if (value) {
-        value = 'REQUIRED'
-      } else {
-        value = 'PREFERRED'
-      }
-    }
-
-    const newJobResponsibilities = jobResponsibilities.map(
-      (responsibility, index) => {
-        if (respIndex !== index) return responsibility
-
-        return { ...responsibility, [field]: value }
-      }
-    )
-    setJobResponsibilities(newJobResponsibilities)
-  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMessage('')
@@ -129,12 +53,7 @@ export default function AddJobForm({ userID }: { userID: number }) {
       const response = await fetch('/api/jobs/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          job,
-          jobDescriptions,
-          jobEducations,
-          jobResponsibilities,
-        }),
+        body: JSON.stringify({ job, jobDetails }),
       })
 
       if (!response.ok) {
@@ -146,29 +65,6 @@ export default function AddJobForm({ userID }: { userID: number }) {
     } catch (error: any) {
       setErrorMessage(error.message || 'An unexpected error occurred')
     }
-  }
-
-  const addJobDescription = () => {
-    const currentOrder = jobDescriptions[jobDescriptions.length - 1]['order']
-    const newJobDescription: JobDescription = {
-      description: '',
-      order: currentOrder + 1,
-    }
-    setJobDescriptions([...jobDescriptions, newJobDescription])
-  }
-  const addJobEducation = () => {
-    const newJobEducation: JobEducation = {
-      field: '',
-      required: 'REQUIRED',
-    }
-    setJobEducations([...jobEducations, newJobEducation])
-  }
-  const addJobResponsibility = () => {
-    const newJobResponsibility: JobResponsibility = {
-      description: '',
-      required: 'REQUIRED',
-    }
-    setJobResponsibilities([...jobResponsibilities, newJobResponsibility])
   }
 
   return (
@@ -189,116 +85,52 @@ export default function AddJobForm({ userID }: { userID: number }) {
         value={job.organization}
         onChange={(e) => handleJobChange('organization', e.target.value)}
       />
+
       <h2>Job Description</h2>
-      <ul>
-        {jobDescriptions.map((description, descIndex) => {
-          return (
-            <div key={descIndex}>
-              <li className='list-disc'>
-                <input
-                  name='descriptionDescription'
-                  value={description.description}
-                  onChange={(e) =>
-                    handleJobDescriptionChange(
-                      descIndex,
-                      'description',
-                      e.target.value
-                    )
-                  }
-                />
-              </li>
-            </div>
-          )
-        })}
-      </ul>
-      <button
-        className='bg-green-500 my-1 px-2'
-        type='button'
-        onClick={addJobDescription}
-      >
-        Add Description
-      </button>
+      <textarea
+        name='descriptions'
+        value={jobDetails.descriptions}
+        onChange={(e) => handleJobDetailsChange('descriptions', e.target.value)}
+      />
+
       <h2>Education Requirements</h2>
-      <ul>
-        {jobEducations.map((edu, eduIndex) => {
-          return (
-            <div key={eduIndex}>
-              <li className='list-disc'>
-                <input
-                  value={edu.field}
-                  name='eduField'
-                  onChange={(e) =>
-                    handleJobEducationChange(eduIndex, 'field', e.target.value)
-                  }
-                />
-                <input
-                  name='eduRequired'
-                  type='checkbox'
-                  value={edu.required}
-                  checked={edu.required == 'REQUIRED' ? true : false}
-                  onChange={(e) =>
-                    handleJobEducationChange(
-                      eduIndex,
-                      'required',
-                      e.target.checked
-                    )
-                  }
-                />
-                <label htmlFor='required'>Required?</label>
-              </li>
-            </div>
-          )
-        })}
-      </ul>
-      <button
-        className='bg-green-500 my-1 px-2'
-        type='button'
-        onClick={addJobEducation}
-      >
-        Add Education
-      </button>
+      <label>Required:</label>
+      <textarea
+        name='requiredEducation'
+        value={jobDetails.requiredEducation}
+        onChange={(e) =>
+          handleJobDetailsChange('requiredEducation', e.target.value)
+        }
+      />
+      <br />
+      <label>Preferred:</label>
+      <textarea
+        name='preferredEducation'
+        value={jobDetails.preferredEducation}
+        onChange={(e) =>
+          handleJobDetailsChange('preferredEducation', e.target.value)
+        }
+      />
+
       <h2>Responsibilities</h2>
-      <ul>
-        {jobResponsibilities.map((responsibility, respIndex) => {
-          return (
-            <div key={respIndex}>
-              <li className='list-disc'>
-                <input
-                  name='respDescription'
-                  value={responsibility.description}
-                  onChange={(e) =>
-                    handleJobResponsibilityChange(
-                      respIndex,
-                      'description',
-                      e.target.value
-                    )
-                  }
-                />
-                <input
-                  name='respRequired'
-                  type='checkbox'
-                  checked={responsibility.required == 'REQUIRED' ? true : false}
-                  onChange={(e) =>
-                    handleJobResponsibilityChange(
-                      respIndex,
-                      'required',
-                      e.target.checked
-                    )
-                  }
-                />
-                <label htmlFor='respRequired'>Required?</label>
-              </li>
-            </div>
-          )
-        })}
-      </ul>
-      <button
-        className='bg-green-500 my-1 px-2'
-        type='button'
-        onClick={addJobResponsibility}
-      >
-        Add Responsibility
-      </button>
+      <label>Required:</label>
+      <textarea
+        name='requiredResponsibilities'
+        value={jobDetails.requiredResponsibilities}
+        onChange={(e) =>
+          handleJobDetailsChange('requiredResponsibilities', e.target.value)
+        }
+      />
+      <br />
+      <label>Preferred:</label>
+      <textarea
+        name='preferredResponsibilities'
+        value={jobDetails.preferredResponsibilities}
+        onChange={(e) =>
+          handleJobDetailsChange('preferredResponsibilities', e.target.value)
+        }
+      />
+
       <div>{errorMessage}</div>
       <button className='bg-green-500 my-1 px-2' type='submit'>
         Save Changes
