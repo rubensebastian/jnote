@@ -1,7 +1,9 @@
 import ManageSubscription from '@/components/ManageSubscription'
+import SubscribeForm from '@/components/SubscribeForm'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import prisma from '@/lib/prisma'
 
 export default async function Account() {
   const cookieStore = await cookies()
@@ -28,9 +30,16 @@ export default async function Account() {
   if (!user) {
     redirect('/')
   } else {
+    const applicant = await prisma.applicant.findUnique({
+      where: { email: user.email },
+    })
     return (
       <div>
-        <ManageSubscription email={user.email} />
+        {applicant!.stripe_subscription_id === null ? (
+          <SubscribeForm />
+        ) : (
+          <ManageSubscription email={user.email} />
+        )}
       </div>
     )
   }
