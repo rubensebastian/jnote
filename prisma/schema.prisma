@@ -34,6 +34,8 @@ model applicant {
   verification_token String?  @unique
   number_of_generates Int
   account_level Plan     @default(STANDARD)
+  stripe_customer_id   String? @unique
+  stripe_subscription_id String? @unique
   education     education[]
   experience    experience[]
   jobs          job[]

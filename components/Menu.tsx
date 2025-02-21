@@ -1,15 +1,11 @@
-import Link from 'next/link'
+import MenuLink from './MenuLink'
 
 export default function Menu() {
   return (
     <nav>
-      <ol className='flex flex-row items-center justify-end h-12 bg-green-500 mt-2 px-4'>
-        <li>
-          <Link href='/about'>About JobNote</Link>
-        </li>
-        <li>
-          <Link href='/account'>Your Account</Link>
-        </li>
+      <ol className='flex flex-row items-center justify-end h-12 bg-gray-300 px-4'>
+        <MenuLink href='/about' description='About JobNote' />
+        <MenuLink href='/account' description='Your Account' />
       </ol>
     </nav>
   )
