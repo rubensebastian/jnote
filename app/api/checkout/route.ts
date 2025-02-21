@@ -65,10 +65,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ sessionId: subscription.id })
   } catch (error) {
-    console.error('Stripe Checkout Error:', error)
-    return NextResponse.json(
-      { error: 'Failed to create checkout session' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: error }, { status: 500 })
   }
 }

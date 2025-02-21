@@ -34,13 +34,13 @@ export default async function Account() {
       where: { email: user.email },
     })
     return (
-      <div>
+      <main>
         {applicant!.stripe_subscription_id === null ? (
           <SubscribeForm email={user.email} />
         ) : (
           <ManageSubscription email={user.email} />
         )}
-      </div>
+      </main>
     )
   }
 }
