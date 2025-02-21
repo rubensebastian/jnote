@@ -21,7 +21,7 @@ export default function SubscribeForm({ email }: { email: string }) {
         await stripe.redirectToCheckout({ sessionId: data.sessionId })
       }
     } else {
-      alert(data)
+      console.log(data)
     }
   }
 
