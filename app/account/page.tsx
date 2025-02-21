@@ -36,7 +36,7 @@ export default async function Account() {
     return (
       <div>
         {applicant!.stripe_subscription_id === null ? (
-          <SubscribeForm />
+          <SubscribeForm email={user.email} />
         ) : (
           <ManageSubscription email={user.email} />
         )}

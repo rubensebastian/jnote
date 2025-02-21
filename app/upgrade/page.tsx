@@ -37,7 +37,7 @@ export default async function Upgrade() {
       <main>
         <h1>Upgrade your account</h1>
         {applicant!.stripe_subscription_id === null ? (
-          <SubscribeForm />
+          <SubscribeForm email={user.email} />
         ) : (
           <ManageSubscription email={user.email} />
         )}
