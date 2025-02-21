@@ -21,7 +21,7 @@ export default function SubscribeForm({ email }: { email: string }) {
         await stripe.redirectToCheckout({ sessionId: data.sessionId })
       }
     } else {
-      console.log(data)
+      alert('Failed to connect to stripe')
     }
   }
 
