@@ -26,19 +26,15 @@ export default function SubscribeForm({ email }: { email: string }) {
   }
 
   return (
-    <div className='p-6 bg-white shadow-md rounded-lg'>
+    <div className='p-6 bg-slate-600 shadow-md rounded-lg'>
       <h2 className='text-lg font-semibold mb-4'>Subscribe to a Plan</h2>
       <select
         value={plan}
         onChange={(e) => setPlan(e.target.value)}
-        className='border p-2 rounded w-full mb-3'
+        className='border p-2 rounded w-full mb-3 text-black'
       >
-        <option className='text-black' value='PRO'>
-          Pro - $10/month
-        </option>
-        <option className='text-black' value='PREMIUM'>
-          Premium - $25/month
-        </option>
+        <option value='PRO'>Pro - $10/month</option>
+        <option value='PREMIUM'>Premium - $25/month</option>
       </select>
       <button
         onClick={handleSubscribe}
