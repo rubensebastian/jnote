@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     }
 
     // Fetch user from the database
-    let user = await prisma.applicant.findUnique({ where: { email } })
+    const user = await prisma.applicant.findUnique({ where: { email } })
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })

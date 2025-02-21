@@ -1,10 +1,7 @@
 import ManageSubscription from '@/components/ManageSubscription'
-import prisma from '@/lib/prisma'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import Link from 'next/link'
-import LogoutButton from '@/components/LogoutButton'
 
 export default async function Account() {
   const cookieStore = await cookies()

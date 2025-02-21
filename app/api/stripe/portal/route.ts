@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ url: portalSession.url })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Unable to create portal session' },
       { status: 500 }
