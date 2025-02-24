@@ -9,6 +9,7 @@ const LoginForm = () => {
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setMessage('')
     e.preventDefault()
 
     const res = await fetch('/api/auth/login', {

@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import JobList from '@/components/JobList'
 import Link from 'next/link'
-import LogoutButton from '@/components/LogoutButton'
 
 export default async function Jobs() {
   const cookieStore = await cookies()
@@ -64,8 +63,6 @@ export default async function Jobs() {
         <Link href='/jobs/add' className='underline'>
           Add a New Job →
         </Link>
-        <br />
-        <LogoutButton />
       </main>
     )
   }

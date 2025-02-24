@@ -19,6 +19,7 @@ const SignupForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setMessage('')
 
     if (formData.password !== formData.confirmPassword) {
       setMessage('Passwords do not match')
