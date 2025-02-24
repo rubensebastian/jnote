@@ -3,6 +3,7 @@
 import { Prisma } from '@prisma/client'
 import { useState } from 'react'
 import { generateWordDocument } from '@/lib/utils'
+import Link from 'next/link'
 
 type JobWithChildren = Prisma.jobGetPayload<{
   include: { jobDescription: true; jobEducation: true; jobResponsibility: true }
@@ -104,6 +105,12 @@ export default function JobList({
 
   return (
     <>
+      <p>You currently have {numberGenerates} remaining this month.</p>
+      {numberGenerates <= 0 ? (
+        <Link className='bg-green-500 my-1 px-2' href='/upgrade'>
+          Upgrade Your Account
+        </Link>
+      ) : null}
       {jobs.map((job, jobIndex) => {
         return (
           <div key={job.id}>

@@ -28,13 +28,14 @@ export default async function Account() {
   }
 
   if (!user) {
-    redirect('/')
+    redirect('/login')
   } else {
     const applicant = await prisma.applicant.findUnique({
       where: { email: user.email },
     })
     return (
       <main>
+        <h1>Welcome, {applicant!.full_name}!</h1>
         {applicant!.stripe_subscription_id === null ? (
           <SubscribeForm email={user.email} />
         ) : (
