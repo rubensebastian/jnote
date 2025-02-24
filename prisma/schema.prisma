@@ -21,6 +21,7 @@ enum Plan {
   STANDARD
   PRO
   PREMIUM
+  TESTER
 }
 
 model applicant {
