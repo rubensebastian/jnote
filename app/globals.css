@@ -26,6 +26,11 @@ nav {
   margin-inline: auto;
 }
 
+main {
+  background-color: #2f3439;
+  padding-inline: 1rem;
+}
+
 input,
 textarea {
   color: #1c1c1c;
@@ -40,5 +45,9 @@ button {
 :not(#main-page) {
   h1 {
     font-size: x-large;
+  }
+
+  h2 {
+    font-size: larger;
   }
 }

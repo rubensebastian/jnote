@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import TermsAndConditions from './TermsAndConditions'
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -13,12 +14,18 @@ const SignupForm = () => {
   })
   const [message, setMessage] = useState('')
   const router = useRouter()
+  const [acceptTerms, setAcceptTerms] = useState(false)
+  const [showAcceptTerms, setShowAcceptTerms] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords don't match")
+      setMessage('Passwords do not match')
+      return
+    }
+    if (!acceptTerms) {
+      setMessage('You must first accept terms and conditions')
       return
     }
 
@@ -42,8 +49,8 @@ const SignupForm = () => {
   }
 
   return (
-    <div className='w-full max-w-md mx-auto p-4 bg-slate-800 rounded-lg shadow-md'>
-      <h2 className='text-xl font-semibold text-center mb-4'>Sign Up</h2>
+    <div className='w-full max-w-lg mx-auto p-4 bg-slate-800 rounded-lg shadow-md'>
+      <h2 className='text-xl font-semibold text-center mb-4'>Register</h2>
       <form onSubmit={handleSubmit}>
         <input
           type='text'
@@ -93,9 +100,34 @@ const SignupForm = () => {
           className='w-full p-2 mb-4 border rounded-lg'
           required
         />
+        <input
+          type='checkbox'
+          name='acceptTerms'
+          id='acceptTerms'
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+        />
+        <label className='ml-2' htmlFor='acceptTerms'>
+          Accept the Terms and Conditions
+        </label>
+        <br />
+        <button
+          onClick={() =>
+            setShowAcceptTerms((showAcceptTerms) => !showAcceptTerms)
+          }
+          className='underline text-white'
+        >
+          Show Terms and Conditions
+        </button>
+        <div
+          hidden={!showAcceptTerms}
+          className='bg-white text-black px-2 rounded-md max-h-60 overflow-scroll'
+        >
+          <TermsAndConditions />
+        </div>
         <button
           type='submit'
-          className='w-full bg-purple-500 text-white p-2 rounded-lg hover:bg-blue-600'
+          className='w-full bg-purple-500 text-white p-2 mt-2 rounded-lg hover:bg-blue-600'
         >
           Register
         </button>
