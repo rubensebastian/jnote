@@ -37,7 +37,7 @@ export default async function Upgrade() {
       return (
         <main>
           <h1>You&apos;re already a tester!</h1>
-          <p>No need for 'upgrading' your account, silly.</p>
+          <p>No need for &apos;upgrading&apos; your account, silly.</p>
         </main>
       )
     }
