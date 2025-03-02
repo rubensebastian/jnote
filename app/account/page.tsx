@@ -34,6 +34,14 @@ export default async function Account() {
     const applicant = await prisma.applicant.findUnique({
       where: { email: user.email },
     })
+    if (applicant!.account_level == 'TESTER') {
+      return (
+        <main>
+          <h1>Welcome, {applicant!.full_name}!</h1>
+          <p>Thanks for helping with testing!</p>
+        </main>
+      )
+    }
     return (
       <main>
         <h1>Welcome, {applicant!.full_name}!</h1>
