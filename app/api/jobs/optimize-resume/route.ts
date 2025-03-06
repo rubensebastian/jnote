@@ -5,7 +5,7 @@ import { fetchGeneratedEmbeddings } from '@/lib/server'
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
-    const { job } = data
+    const { job, token, email } = data
     const userID = job.applicant_id
 
     const applicant = await prisma.applicant.findUnique({
@@ -69,7 +69,9 @@ export async function POST(req: NextRequest) {
       safeEducations,
       job.jobDescription,
       job.jobResponsibility,
-      safeExperiences
+      safeExperiences,
+      token,
+      email
     )
 
     await prisma.applicant.update({

@@ -1,6 +1,6 @@
 'use client'
 
-import { Prisma } from '@prisma/client'
+import { Prisma, Plan } from '@prisma/client'
 import { useState } from 'react'
 import { generateWordDocument } from '@/lib/utils'
 import Link from 'next/link'
@@ -13,10 +13,16 @@ export default function JobList({
   initialJobs,
   numberOfGenerates,
   fullName,
+  token,
+  email,
+  accountLevel,
 }: {
   initialJobs: JobWithChildren[]
   numberOfGenerates: number
   fullName: string
+  token: string
+  email: string
+  accountLevel: Plan
 }) {
   const details: string[] = []
   for (let i = 0; i < initialJobs.length; i++) {
@@ -56,7 +62,11 @@ export default function JobList({
   }
 
   const generateEmbedding = async (job: JobWithChildren) => {
-    if (numberGenerates < 1) {
+    if (
+      accountLevel != 'PREMIUM' &&
+      accountLevel != 'TESTER' &&
+      numberGenerates < 1
+    ) {
       alert("You don't have any free resume optimizations this month ):")
       return
     }
@@ -85,6 +95,8 @@ export default function JobList({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         job: safeJob,
+        token,
+        email,
       }),
     })
 
@@ -105,8 +117,16 @@ export default function JobList({
 
   return (
     <>
-      <p>You currently have {numberGenerates} remaining this month.</p>
-      {numberGenerates <= 0 ? (
+      <p>
+        You currently have{' '}
+        {accountLevel == 'PREMIUM' || accountLevel == 'TESTER'
+          ? 'unlimited'
+          : numberGenerates}{' '}
+        remaining this month.
+      </p>
+      {accountLevel != 'PREMIUM' &&
+      accountLevel != 'TESTER' &&
+      numberGenerates < 1 ? (
         <Link className='bg-green-500 my-1 px-2' href='/upgrade'>
           Upgrade Your Account
         </Link>

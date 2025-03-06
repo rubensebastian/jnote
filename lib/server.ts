@@ -28,7 +28,9 @@ export async function fetchGeneratedEmbeddings(
   resumeEducations: Education[],
   jobDescriptions: any,
   jobResponsibilities: any,
-  resumeExperiences: Experience[]
+  resumeExperiences: Experience[],
+  token: string,
+  email: string
 ) {
   const response = await fetch(
     `${process.env.EXPRESS_API_URL}/optimize-resume`,
@@ -41,6 +43,8 @@ export async function fetchGeneratedEmbeddings(
         jobDescriptions,
         jobResponsibilities,
         resumeExperiences,
+        token,
+        email,
       }),
     }
   )

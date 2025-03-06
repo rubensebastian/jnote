@@ -59,6 +59,9 @@ export default async function Jobs() {
           initialJobs={jobs}
           numberOfGenerates={applicant.number_of_generates}
           fullName={applicant.full_name}
+          token={token!}
+          email={applicant.email}
+          accountLevel={applicant.account_level}
         />
         <Link href='/jobs/add' className='underline'>
           Add a New Job →
