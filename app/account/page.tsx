@@ -39,6 +39,8 @@ export default async function Account() {
         <main>
           <h1>Welcome, {applicant!.full_name}!</h1>
           <p>Thanks for helping with testing!</p>
+          <br />
+          <LogoutButton />
         </main>
       )
     }
