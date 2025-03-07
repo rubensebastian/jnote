@@ -2,7 +2,7 @@ import DetailCard from '@/components/DetailCard'
 import profilePic from '@/public/cube.png'
 
 export default function About() {
-  const titleContent = 'About @rubenCubed'
+  const titleContent = 'About @RubenCubed'
   const textContent =
     'Ruben is a front-end developer based in the northest US. Frustrated with the job application process, he created JobNote to help applicants reduce some of the tedium with applying to jobs. In the two years it took him to build this, Ruben got a job and LinkedIn released something similar. Oh, well. Hope you enjoy using this.'
   return (
