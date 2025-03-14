@@ -35,14 +35,14 @@ export default async function Upgrade() {
     })
     if (applicant!.account_level == 'TESTER') {
       return (
-        <main>
+        <main className='grow'>
           <h1>You&apos;re already a tester!</h1>
           <p>No need for &apos;upgrading&apos; your account, silly.</p>
         </main>
       )
     }
     return (
-      <main>
+      <main className='grow'>
         <h1>Upgrade your account</h1>
         {applicant!.stripe_subscription_id === null ? (
           <SubscribeForm email={user.email} />

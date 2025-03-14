@@ -324,7 +324,7 @@ export default function ResumeEditable({
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className='mt-4'>Education</h2>
+      <h2 className='mt-2'>Education</h2>
       <ul>
         {educations.map((education, index) => (
           <li key={education.id.toString()}>
@@ -337,7 +337,7 @@ export default function ResumeEditable({
                 }
               />
               <button
-                className='bg-green-500 ml-2 px-1'
+                className='bg-green-500 ml-4 px-1 rounded-sm'
                 type='button'
                 onClick={() => {
                   deleteEducation(index)
@@ -405,7 +405,7 @@ export default function ResumeEditable({
                 }
               />
               <button
-                className='bg-green-500 ml-2 px-1'
+                className='bg-green-500 ml-4 px-1 rounded-sm'
                 type='button'
                 onClick={() => {
                   deleteNewEducation(index)
@@ -499,7 +499,7 @@ export default function ResumeEditable({
                   }
                 />
                 <button
-                  className='bg-green-500 ml-2 px-1'
+                  className='bg-green-500 ml-4 px-1 rounded-sm'
                   type='button'
                   onClick={() => {
                     deleteExperience(expIndex)
@@ -555,7 +555,7 @@ export default function ResumeEditable({
                         }
                       />
                       <button
-                        className='bg-green-500 ml-2 px-1'
+                        className='bg-green-500 ml-4 px-1 rounded-sm'
                         type='button'
                         onClick={() => {
                           deleteResponsibility(expIndex, respIndex)
@@ -568,7 +568,7 @@ export default function ResumeEditable({
                 </ul>
               )}
             <button
-              className='bg-green-500 my-1 px-2'
+              className='bg-green-500 my-1 px-2 rounded-sm'
               type='button'
               onClick={() => createResponsibility(expIndex, experience.id)}
             >
@@ -602,7 +602,7 @@ export default function ResumeEditable({
                   }
                 />
                 <button
-                  className='bg-green-500 ml-2 px-1'
+                  className='bg-green-500 ml-4 px-1 rounded-sm'
                   type='button'
                   onClick={() => {
                     deleteNewExperience(expIndex)
@@ -662,7 +662,7 @@ export default function ResumeEditable({
                         }
                       />
                       <button
-                        className='bg-green-500 ml-2 px-1'
+                        className='bg-green-500 ml-4 px-1 rounded-sm'
                         type='button'
                         onClick={() => {
                           deleteNewResponsibility(expIndex, respIndex)
@@ -675,7 +675,7 @@ export default function ResumeEditable({
                 </ul>
               )}
             <button
-              className='bg-green-500 my-1 px-2'
+              className='bg-green-500 my-1 px-2 rounded-sm'
               type='button'
               onClick={() => createNewResponsibility(expIndex)}
             >
@@ -685,7 +685,7 @@ export default function ResumeEditable({
         ))}
       </ul>
       <button
-        className='bg-green-500 my-1 px-2'
+        className='bg-green-500 my-1 px-2 rounded-sm'
         type='button'
         onClick={createExperience}
       >
@@ -693,7 +693,7 @@ export default function ResumeEditable({
       </button>
       <br />
       <div>{errorMessage}</div>
-      <button className='bg-green-500 my-1 px-2' type='submit'>
+      <button className='bg-green-500 my-1 px-2 rounded-sm' type='submit'>
         Save Changes
       </button>
     </form>

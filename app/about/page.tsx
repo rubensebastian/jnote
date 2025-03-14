@@ -6,7 +6,7 @@ export default function About() {
   const textContent =
     'Ruben is a front-end developer based in the northest US. Frustrated with the job application process, he created JobNote to help applicants reduce some of the tedium with applying to jobs. In the two years it took him to build this, Ruben got a job and LinkedIn released something similar. Oh, well. Hope you enjoy using this.'
   return (
-    <main>
+    <main className='grow'>
       <h1>About</h1>
       <p>
         JobNote is a free-to-use web application that optimizes your resume for

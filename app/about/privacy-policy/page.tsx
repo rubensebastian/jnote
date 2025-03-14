@@ -2,7 +2,7 @@ import TermsAndConditions from '@/components/TermsAndConditions'
 
 export default function PrivacyPolicy() {
   return (
-    <main>
+    <main className='grow'>
       <h1>Privacy Policy</h1>
       <TermsAndConditions />
     </main>

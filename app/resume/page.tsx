@@ -39,8 +39,11 @@ export default async function Resume() {
     })
 
     return (
-      <main className='max-w-2xl mx-auto p-4 relative'>
-        <Link href='/resume/edit' className='absolute right-0'>
+      <main className='py-4 px-48 relative grow'>
+        <Link
+          href='/resume/edit'
+          className='absolute right-2 bg-green-500 px-3 py-1 rounded-sm text-black text-lg'
+        >
           Edit Resume
         </Link>
         <h1 className='text-center'>Resume</h1>
@@ -106,7 +109,6 @@ export default async function Resume() {
             </li>
           ))}
         </ul>
-        <LogoutButton />
       </main>
     )
   }

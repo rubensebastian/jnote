@@ -122,7 +122,7 @@ export default function JobList({
         {accountLevel == 'PREMIUM' || accountLevel == 'TESTER'
           ? 'unlimited'
           : numberGenerates}{' '}
-        remaining this month.
+        resume optimizations remaining this month.
       </p>
       {accountLevel != 'PREMIUM' &&
       accountLevel != 'TESTER' &&
@@ -133,11 +133,11 @@ export default function JobList({
       ) : null}
       {jobs.map((job, jobIndex) => {
         return (
-          <div key={job.id}>
+          <div className='bg-slate-950 px-2 py-1 my-1 rounded-sm' key={job.id}>
             <div className='flex items-center'>
-              <h2>{job.title}</h2>
+              <h2 className='grow'>{job.title}</h2>
               <button
-                className='bg-green-500 my-1 ml-2 px-2'
+                className='bg-green-500 my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => toggleDetails(jobIndex)}
               >
@@ -146,14 +146,14 @@ export default function JobList({
                 <span className='sr-only'> for {job.title}</span>
               </button>
               <button
-                className='bg-purple-600 my-1 ml-2 px-2'
+                className='bg-purple-600 my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => deleteJob(job.id, jobIndex)}
               >
                 Delete Job<span className='sr-only'> {job.title}</span>
               </button>
               <button
-                className='bg-blue-500 my-1 ml-2 px-2'
+                className='bg-blue-500 my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => generateEmbedding(jobs[jobIndex])}
               >
@@ -161,26 +161,26 @@ export default function JobList({
               </button>
             </div>
             <div className={showDetails[jobIndex]}>
-              <h2>Description</h2>
+              <h3>Description</h3>
               {job.jobDescription.map((desc) => {
                 return <p key={desc.id}>{desc.description}</p>
               })}
-              <h2>Education</h2>
+              <h3>Education</h3>
               <ul>
                 {job.jobEducation.map((edu) => {
                   return (
-                    <li className='list-disc' key={edu.id}>
+                    <li className='list-disc pl-2 list-inside' key={edu.id}>
                       {edu.field}
                       {edu.required == 'PREFERRED' && null}
                     </li>
                   )
                 })}
               </ul>
-              <h2>Responsibilities</h2>
+              <h3>Responsibilities</h3>
               <ul>
                 {job.jobResponsibility.map((resp) => {
                   return (
-                    <li className='list-disc' key={resp.id}>
+                    <li className='list-disc pl-2 list-inside' key={resp.id}>
                       {resp.description}
                       {resp.required == 'PREFERRED' && null}
                     </li>

@@ -48,7 +48,7 @@ export default async function Jobs() {
     }
 
     return (
-      <main className='max-w-2xl mx-auto p-4'>
+      <main className='mx-auto py-4 px-10 grow'>
         <div className='flex flex-row items-center justify-center'>
           <h1>Saved Jobs</h1>
           <Link href={'/resume'} className='bg-green-500 px-2 ml-6'>

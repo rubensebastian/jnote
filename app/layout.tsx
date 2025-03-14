@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className='bg-slate-900'>
+      <body className='bg-slate-900 h-svh flex flex-col'>
         <Menu />
         {children}
       </body>

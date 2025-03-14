@@ -36,7 +36,7 @@ export default async function Account() {
     })
     if (applicant!.account_level == 'TESTER') {
       return (
-        <main>
+        <main className='grow'>
           <h1>Welcome, {applicant!.full_name}!</h1>
           <p>Thanks for helping with testing!</p>
           <br />
@@ -45,7 +45,7 @@ export default async function Account() {
       )
     }
     return (
-      <main>
+      <main className='grow'>
         <h1>Welcome, {applicant!.full_name}!</h1>
         {applicant!.stripe_subscription_id === null ? (
           <SubscribeForm email={user.email} />
