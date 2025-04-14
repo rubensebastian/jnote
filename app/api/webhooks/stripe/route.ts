@@ -45,12 +45,16 @@ export async function POST(req: Request) {
     // Get the plan from the subscription
     const priceId = session.items.data[0].price.id
     let newPlan: Plan
+    let newNumberOfGenerates: number
     if (priceId === process.env.STRIPE_PRO_PLAN_PRICE_ID) {
       newPlan = 'PRO'
+      newNumberOfGenerates = 500
     } else if (priceId === process.env.STRIPE_PREMIUM_PLAN_PRICE_ID) {
       newPlan = 'PREMIUM'
+      newNumberOfGenerates = 15
     } else {
       newPlan = 'STANDARD'
+      newNumberOfGenerates = 5
     }
 
     // Update the user in the database
@@ -59,6 +63,7 @@ export async function POST(req: Request) {
       data: {
         account_level: newPlan,
         stripe_subscription_id: session.id,
+        number_of_generates: newNumberOfGenerates,
       },
     })
   }
@@ -71,7 +76,11 @@ export async function POST(req: Request) {
     if (email) {
       await prisma.applicant.update({
         where: { email },
-        data: { account_level: 'STANDARD', stripe_subscription_id: null },
+        data: {
+          account_level: 'STANDARD',
+          stripe_subscription_id: null,
+          number_of_generates: 5,
+        },
       })
     }
   }
