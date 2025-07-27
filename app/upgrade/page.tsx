@@ -33,14 +33,14 @@ export default async function Upgrade() {
     const applicant = await prisma.applicant.findUnique({
       where: { email: user.email },
     })
-    if (applicant!.account_level == 'TESTER') {
-      return (
-        <main className='grow'>
-          <h1>You&apos;re already a tester!</h1>
-          <p>No need for &apos;upgrading&apos; your account, silly.</p>
-        </main>
-      )
-    }
+    // if (applicant!.account_level == 'TESTER') {
+    //   return (
+    //     <main className='grow'>
+    //       <h1>You&apos;re already a tester!</h1>
+    //       <p>No need for &apos;upgrading&apos; your account, silly.</p>
+    //     </main>
+    //   )
+    // }
     return (
       <main className='grow'>
         <h1>Upgrade your account</h1>
