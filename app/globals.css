@@ -3,32 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #00091a;
+  --foreground: #ededed;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1c1c1c;
-    --foreground: #ededed;
-  }
-}
 
 body {
   color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 main,
 nav {
-  width: min(100% - 4rem, 1200px);
   margin-inline: auto;
 }
 
 main {
-  background-color: #2f3439;
-  padding-inline: 1rem;
+  width: min(100% - 4rem, 40rem);
+}
+
+nav {
+  width: min(100% - 4rem, 1200px);
 }
 
 input,
@@ -44,14 +39,19 @@ button {
 
 main:not(#main-page) {
   h1 {
-    font-size: x-large;
+    font-size: 2rem;
   }
 
   h2 {
-    font-size: larger;
+    font-size: 1.5rem;
   }
 
   h3 {
-    font-size: large;
+    font-size: 1.25rem;
+  }
+
+  p {
+    line-height: 1.5rem;
+    margin-block-end: 2.25rem;
   }
 }

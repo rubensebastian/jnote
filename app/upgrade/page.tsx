@@ -42,7 +42,7 @@ export default async function Upgrade() {
     //   )
     // }
     return (
-      <main className='grow'>
+      <main>
         <h1>Upgrade your account</h1>
         {applicant!.stripe_subscription_id === null ? (
           <SubscribeForm email={user.email} />

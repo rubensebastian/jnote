@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
-      <body className='bg-background h-svh flex flex-col'>
+    <html lang='en' className='bg-background'>
+      <body>
         <Menu />
         {children}
       </body>

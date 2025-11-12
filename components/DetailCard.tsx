@@ -75,7 +75,7 @@ export default function DetailCard({
           height={120}
           width={120}
           alt=''
-          className='border-r-highlight rounded-lg'
+          className='border-r-desaturated rounded-lg'
         />
         <div className='text-black'>
           <h2>{titleContent}</h2>
