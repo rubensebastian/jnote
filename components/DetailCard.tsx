@@ -61,7 +61,7 @@ export default function DetailCard({
           items-center
           gap-2
           rounded-lg
-          bg-green-100
+          bg-desaturated
           transition-transform 
           duration-300 
           ease-out 
@@ -75,7 +75,7 @@ export default function DetailCard({
           height={120}
           width={120}
           alt=''
-          className='border-r-green-500 rounded-lg'
+          className='border-r-highlight rounded-lg'
         />
         <div className='text-black'>
           <h2>{titleContent}</h2>

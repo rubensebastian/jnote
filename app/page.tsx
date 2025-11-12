@@ -31,13 +31,13 @@ export default async function Home() {
       <div className='my-6'>
         <Link
           href={'/login'}
-          className='bg-green-500 text-white font-semibold py-2 px-4 rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 mx-2'
+          className='bg-highlight text-black font-semibold text-lg py-2 px-4 rounded shadow-md hover:bg-desaturated hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 mx-2'
         >
           Login →
         </Link>
         <Link
           href={'/register'}
-          className='bg-purple-500 text-white font-semibold py-2 px-4 rounded shadow-md hover:bg-purple-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 mx-2'
+          className='bg-subdesaturated text-black font-semibold text-lg py-2 px-4 rounded shadow-md hover:bg-sublight hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 mx-2'
         >
           Register for free →
         </Link>

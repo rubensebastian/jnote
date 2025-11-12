@@ -42,7 +42,7 @@ button {
   color: #1c1c1c;
 }
 
-:not(#main-page) {
+main:not(#main-page) {
   h1 {
     font-size: x-large;
   }

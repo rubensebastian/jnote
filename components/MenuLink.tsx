@@ -9,7 +9,7 @@ export default function MenuLink({
 }) {
   return (
     <li>
-      <Link href={href} className='text-slate-800 font-semibold mr-4'>
+      <Link href={href} className='text-white font-semibold text-lg ml-4'>
         {description}
       </Link>
     </li>
