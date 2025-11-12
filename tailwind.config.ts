@@ -14,6 +14,8 @@ const config: Config = {
         desaturated: '#80ffbf',
         sublight: '#7d00fa',
         subdesaturated: '#bf80ff',
+        lightblue: '007dfa',
+        extralightblue: '#82c1ff',
       },
     },
   },

@@ -133,7 +133,7 @@ export default function JobList({
       ) : null}
       {jobs.map((job, jobIndex) => {
         return (
-          <div className='bg-slate-950 px-2 py-1 my-1 rounded-sm' key={job.id}>
+          <div className='px-2 py-1 my-1 rounded-sm' key={job.id}>
             <div className='flex items-center'>
               <h2 className='grow'>{job.title}</h2>
               <button
@@ -146,14 +146,14 @@ export default function JobList({
                 <span className='sr-only'> for {job.title}</span>
               </button>
               <button
-                className='bg-sublight my-1 ml-2 px-2 rounded-sm'
+                className='bg-subdesaturated my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => deleteJob(job.id, jobIndex)}
               >
                 Delete Job<span className='sr-only'> {job.title}</span>
               </button>
               <button
-                className='bg-blue-500 my-1 ml-2 px-2 rounded-sm'
+                className='bg-extralightblue my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => generateEmbedding(jobs[jobIndex])}
               >

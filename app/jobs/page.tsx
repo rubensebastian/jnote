@@ -48,10 +48,13 @@ export default async function Jobs() {
     }
 
     return (
-      <main className='mx-auto py-4 px-10 grow'>
+      <main className='py-4'>
         <div className='flex flex-row items-center justify-center'>
           <h1>Saved Jobs</h1>
-          <Link href={'/resume'} className='bg-highlight rounded-sm px-2 ml-6'>
+          <Link
+            href={'/resume'}
+            className='bg-highlight text-black rounded-sm px-2 ml-6'
+          >
             Go to Resume
           </Link>
         </div>
@@ -63,8 +66,11 @@ export default async function Jobs() {
           email={applicant.email}
           accountLevel={applicant.account_level}
         />
-        <Link href='/jobs/add' className='underline'>
-          Add a New Job →
+        <Link
+          href='/jobs/add'
+          className='bg-highlight text-black rounded-sm px-2 ml-6'
+        >
+          Add a New Job
         </Link>
       </main>
     )
