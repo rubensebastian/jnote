@@ -38,10 +38,10 @@ export default async function Resume() {
     })
 
     return (
-      <main className='py-4 px-48 relative grow'>
+      <main className='py-4 relative grow'>
         <Link
           href='/resume/edit'
-          className='absolute right-2 bg-green-500 px-3 py-1 rounded-sm text-black text-lg'
+          className='absolute right-2 bg-highlight px-3 py-1 rounded-sm text-black text-lg'
         >
           Edit Resume
         </Link>

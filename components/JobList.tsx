@@ -127,7 +127,7 @@ export default function JobList({
       {accountLevel != 'PREMIUM' &&
       accountLevel != 'TESTER' &&
       numberGenerates < 1 ? (
-        <Link className='bg-green-500 my-1 px-2' href='/upgrade'>
+        <Link className='bg-highlight rounded-sm my-1 px-2' href='/upgrade'>
           Upgrade Your Account
         </Link>
       ) : null}
@@ -137,7 +137,7 @@ export default function JobList({
             <div className='flex items-center'>
               <h2 className='grow'>{job.title}</h2>
               <button
-                className='bg-green-500 my-1 ml-2 px-2 rounded-sm'
+                className='bg-highlight my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => toggleDetails(jobIndex)}
               >
@@ -146,7 +146,7 @@ export default function JobList({
                 <span className='sr-only'> for {job.title}</span>
               </button>
               <button
-                className='bg-purple-600 my-1 ml-2 px-2 rounded-sm'
+                className='bg-sublight my-1 ml-2 px-2 rounded-sm'
                 type='button'
                 onClick={() => deleteJob(job.id, jobIndex)}
               >

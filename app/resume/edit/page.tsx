@@ -38,7 +38,7 @@ export default async function ResumeEdit() {
     })
 
     return (
-      <main className='px-36 py-4'>
+      <main className='py-4'>
         <h1 className='text-center'>Resume</h1>
         <ResumeEditable
           educations={educations}

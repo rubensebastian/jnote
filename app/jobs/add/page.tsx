@@ -30,14 +30,14 @@ export default async function AddJob() {
     redirect('/')
   } else {
     return (
-      <main className='max-w-4xl mx-auto p-4'>
+      <main className='p-4'>
         <h1 className='text-center'>Add New Job</h1>
         <aside>
           Want to add jobs as you browse the web? Use our extension/plugin
           instead!
         </aside>
         <AddJobForm userID={user.id} />
-        <Link href={'/jobs'} className='bg-green-500 px-2 mt-2'>
+        <Link href={'/jobs'} className='bg-highlight rounded-sm px-2 mt-2'>
           Go back to Jobs
         </Link>
       </main>
