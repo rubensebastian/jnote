@@ -21,7 +21,7 @@
     "docx": "^9.1.1",
     "file-saver": "^2.0.5",
     "jsonwebtoken": "^9.0.2",
-    "next": "15.1.9",
+    "next": "15.1.11",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.9.16",
     "onnxruntime-node": "^1.20.1",
